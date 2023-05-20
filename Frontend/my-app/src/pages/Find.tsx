@@ -1,16 +1,48 @@
 import { useForm } from 'react-hook-form'
 import React, { useEffect, useState } from 'react'
-import TextInput from '@/components/TextInput';
+import Map from '../components/Map';
 
 export interface FindValues {
     origin: string,
     destination: string
 }
 
+type Coordinate = {
+    latitude: number;
+    longitude: number;
+}
+
+type Option = {
+    value: string;
+    label: string;
+    coordinate: Coordinate;
+}
+
 const Find = () => {
 
-    const [answer, setAnswer] = useState<string>("");
+    const [options, setOptions] = useState<Array<Option>>([]);
+    const [selectedOriOption, setSelectedOriOption] = useState<Option>();
+    const [selectedDestOption, setSelectedDestOption] = useState<Option>();
+
+    useEffect(() => {
+        fetch('http://localhost:5000/option')
+            .then((response) => response.json())
+            .then((data) => {
+                setOptions(data.options);
+                console.log(data.options);
+            })
+            .catch((error) => {
+                console.error('Error fetching options:', error);
+            });
+
+    }, []);
+
+    const [answer1, setAnswer1] = useState<Array<[string, string, number, string, [number, number], [number, number]]>>([]);
+    const [answer2, setAnswer2] = useState<Array<[string, string, number, string, [number, number], [number, number]]>>([]);
+    const [totalCost1, setTotalCost1] = useState<number>();
+    const [totalCost2, setTotalCost2] = useState<number>();
     const [isAnswered, setIsAnswered] = useState(false);
+    const [isToggled, setIsToggled] = useState(false);
 
     const {
         register,
@@ -29,119 +61,173 @@ const Find = () => {
         });
         const result = await response.json();
 
-        if (response.ok) {
-            console.log("OKE");
-          } else {
-            console.log("NOT OK");
-          }
+        if (!response.ok)
+            console.log("Response Not OK");
 
         console.log(result);
-        // console.log(data);
 
-        setAnswer(result.data.answer);
+        setAnswer1(result.data.answer.data_rute1);
+        setAnswer2(result.data.answer.data_rute2);
+        setTotalCost1(result.data.answer.total_cost1);
+        setTotalCost2(result.data.answer.total_cost2);
         setIsAnswered(true);
         reset();
     }
 
+    const emptyOption: Option = {
+        value: "",
+        label: "",
+        coordinate: {
+            latitude: 0,
+            longitude: 0,
+        },
+    };
+
     return (
         <main className=''>
-            <section className='bg-gradient-to-r from-sky-500 to-indigo-500 flex flex-col justify-center min-h-screen items-center'>
-                <div className='bg-white rounded-lg flex flex-col p-5 my-10 mx-10 sm:w-[35rem]'>
-                    <form onSubmit={handleSubmit(onSubmit)} className=''>
+            <section className='bg-gradient-to-t from-[#3A0CA3] via-[#19195B] via-[#232268] to-[#3A0CA3] flex flex-col justify-center min-h-screen w-screen items-center'>
 
-                        <div className='flex flex-col gap-2'>
+                <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col w-full items-center h-full'>
+                    <div className='bg-gradient-to-br from-[#7109B6] via-[#4BC9F1] to-[#7109B6] h-3/4 w-full flex flex-col gap-5 rounded-3xl items-center py-5'>
 
-                            <div className='flex flex-col justify-center'>
-                                <p className='text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-indigo-500 font-bold text-2xl sm:text-5xl md:text-3xl self-center sm:p-3'>Welcome to Phlog!</p>
-                                <p className='text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-indigo-500 font-bold text-lg sm:text-2xl self-center'>Fill out this form to sign up</p>
-                            </div>
 
-                            <div className='sm:flex justify-between md:gap-2'>
 
-                                <div className='basis-1/2'>
-                                    <TextInput label="Kota Asal" name="origin" register={register} type="text" errors={errors} />
+                        <div className='bg-[#122C5A] rounded-3xl flex flex-col p-5 w-11/12'>
+                            <div className='flex flex-col gap-2'>
+
+                                <div className='sm:flex justify-between md:gap-2'>
+
+                                    <div className='basis-1/2 flex flex-col'>
+                                        <label htmlFor='origin' className='text-white text-lg'>Provinsi Asal</label>
+                                        <select
+                                            id="origin"
+                                            className="bg-gradient-to-t from-[#82ACF5] to-[#4460EF] p-2 rounded-full"
+                                            {...register("origin", { required: 'Provinsi Asal harus dipilih' })}
+                                            onChange={(e) => {
+                                                const selectedValue = e.target.value;
+                                                const selectedOriOption = options.find(
+                                                    (option) => option.value === selectedValue
+                                                );
+                                                setSelectedOriOption(selectedOriOption);
+                                            }}
+                                        >
+                                            <option value="">Pilih Provinsi Asal</option>
+                                            {options.map((option) => (
+                                                <option
+                                                    className="bg-[#4460EF] text-white"
+                                                    key={option.value}
+                                                    value={option.value}
+                                                >
+                                                    {option.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        {errors.origin && (
+                                            <p className="text-red-500 text-xs mt-1">{errors.origin.message}</p>
+                                        )}
+                                    </div>
+
+                                    <div className='basis-1/2 flex flex-col'>
+                                        <label htmlFor='destination' className='text-white text-lg'>Provinsi Tujuan</label>
+
+                                        <select
+                                            id="destination"
+                                            className="bg-gradient-to-t from-[#82ACF5] to-[#4460EF] p-2 rounded-full"
+                                            {...register("destination", { required: 'Provinsi tujuan harus dipilih' })}
+                                            onChange={(e) => {
+                                                const selectedValue = e.target.value;
+                                                const selectedDestOption = options.find(
+                                                    (option) => option.value === selectedValue
+                                                );
+                                                setSelectedDestOption(selectedDestOption);
+                                            }}
+                                        >
+                                            <option value="">Pilih Provinsi Tujuan</option>
+                                            {options.map((option) => (
+                                                <option
+                                                    className="bg-[#4460EF] text-white"
+                                                    key={option.value}
+                                                    value={option.value}
+                                                >
+                                                    {option.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        {errors.destination && (
+                                            <p className="text-red-500 text-xs mt-1">{errors.destination.message}</p>
+                                        )}
+                                    </div>
                                 </div>
-
-                                <div className='basis-1/2'>
-                                    <TextInput label="Kota Tujuan" name="destination" register={register} type="text" errors={errors} />
-                                </div>
-
                             </div>
-
-                            <div>
-                                <input type="submit" className='font-semibold p-2 cursor-pointer w-full bg-gradient-to-r from-sky-500 to-indigo-500 rounded-xl shadow-lg' />
-                            </div>
-
                         </div>
 
-                    </form>
+                        {isAnswered && (
+                            <label className="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" className="sr-only peer" checked={isToggled} onChange={() => setIsToggled(!isToggled)} />
+                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#766FF9]"></div>
+                                <span className="ml-3 text-sm font-medium text-black dark:text-black"> Waktu Tempuh</span>
+                            </label>)
+                        }
 
-                    {isAnswered && ( 
-                        <>
-                        <h1 className='text-red-500'>{answer}</h1>
-                        </>
-                    )}
+                        <div className='w-full h-full flex flex-col md:flex-row items-center justify-around'>
 
-                </div>
+                            <div className="bg-red-500 w-11/12 h-96 md:w-1/2 md:h-52 border-2">
+
+                                <Map
+                                    ori={selectedOriOption || emptyOption}
+                                    dest={selectedDestOption || emptyOption}
+                                    path1={answer1.map(([, , , , point1, point2]) => [point1, point2])}
+                                    path2={answer2.map(([, , , , point1, point2]) => [point1, point2])}
+                                    toggle={{
+                                        isToggled: isToggled,
+                                        setIsToggled: setIsToggled,
+                                    }}
+                                />
+                            </div>
+
+                            {isAnswered && !isToggled && (
+                                <>
+                                    <div className='text-black bg-blue-500'>
+                                        <h2 className="text-2xl mt-6">Rute dan biaya tempuh:</h2>
+                                        <ul>
+                                            {answer1.map(([start, end, cost, busName]) => (
+                                                <li key={start}>
+                                                    {start} -&gt; {end} : {cost} by {busName}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                        <h2>Total Biaya Tempuh : {totalCost1} </h2>
+                                    </div>
+                                </>
+                            )}
+
+                            {isAnswered && isToggled && (
+                                <>
+                                    <div className='text-black bg-blue-500'>
+                                        <h2 className="text-2xl mt-6">Rute dan waktu tempuh:</h2>
+                                        <ul>
+                                            {answer2.map(([start, end, cost, busName]) => (
+                                                <li key={start}>
+                                                    {start} -&gt; {end} : {cost} by {busName}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                        <h2>Total Waktu Tempuh : {totalCost2} </h2>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+
+
+                    </div>
+
+                    <div>
+                        <input type="submit" className='font-semibold p-2 cursor-pointer w-full bg-gradient-to-r from-sky-500 to-indigo-500 rounded-xl shadow-lg' />
+                    </div>
+                </form>
             </section>
         </main>
     )
 }
 
 export default Find
-
-// interface City {
-//     id: number;
-//     id_provinsi: string;
-//     name: string;
-// }
-
-// interface FormData {
-//     city: string;
-// }
-
-// interface ResponseData {
-//     cities: City[];
-// }
-
-// const [cities, setCities] = useState<City[]>([]);
-//     const { setValue } = useForm<FormData>();
-
-//     useEffect(() => {
-//         const fetchData = async () => {
-//             const response = await fetch("https://api.binderbyte.com/wilayah/kabupaten?api_key=8e49f28e0f2f2cf56393c352613eec358e85fb7077ce6f7f453ebb826a7b1f6d&id_provinsi=36");
-//             console.log(response);
-//             const responseData: ResponseData = await response.json();
-//             setCities(responseData.cities);
-//         };
-
-//         fetchData();
-//     }, []);
-
-//     useEffect(() => {
-//         console.log(cities); // This will show the updated value of `cities`
-//       }, [cities]);
-
-//     register('origin', {
-//         required: {
-//             value: true,
-//             message: "City is required!"
-//         }
-//     });
-
-
-{/* <div className='basis-1/2'>
-                                <label htmlFor="City" className='text-black font-semibold'>
-                                    City:
-                                </label>
-                                <select
-                                    id='City'
-                                    {...register('origin')}
-                                    className='w-full shadow-sm rounded-md p-1 border-2 border-grey-500 bg-white text-black font-normal'>
-                                    <option className="text-red-500" value="">Select a city</option>
-                                    {cities && cities.map((city) => (
-                                        <option key={city.name} value={city.name}>{city.name}</option>
-                                    ))}
-                                </select>
-                                <p className='text-red-500'> {errors.origin?.message}</p>
-                            </div> */}
