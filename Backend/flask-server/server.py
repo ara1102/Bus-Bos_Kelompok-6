@@ -65,15 +65,36 @@ def astar(asal, tujuan):
     # cost_weight itu weight buat a* berdasarkan harga tiket 
     # time_weight itu weight buat a* berdasarkan waktu tempuh
 
+
     edges = [
-        ('Banten', 'DKI Jakarta', {'cost_weight': 10, 'bus_name': 'bus A', 'time_weight': 1, 'origin_coords': (-6.109918118031118,106.1422995381122), 'dest_coords': ( -6.170238459973355, 106.84270678401491)}),
-        ('Banten', 'DKI Jakarta', {'cost_weight': 8, 'bus_name': 'bus B', 'time_weight': 2, 'origin_coords': (-6.109918118031118,106.1422995381122), 'dest_coords': ( -6.170238459973355, 106.84270678401491)}),
-        ('Banten', 'Jawa Barat', {'cost_weight': 22, 'bus_name': 'bus C', 'time_weight': 3, 'origin_coords': (-6.109918118031118,106.1422995381122), 'dest_coords': (-6.913677130043071, 107.60203239958584)}),
-        ('DKI Jakarta', 'Jawa Barat', {'cost_weight': 44, 'bus_name': 'bus D', 'time_weight': 4, 'origin_coords': ( -6.170238459973355, 106.84270678401491), 'dest_coords': (-6.913677130043071, 107.60203239958584)}),
-        ('Jawa Barat', 'Jawa Tengah', {'cost_weight': 29, 'bus_name': 'bus E', 'time_weight': 5, 'origin_coords': (-6.913677130043071, 107.60203239958584), 'dest_coords': (-7.0291435858578195, 110.41763151518792)}),
-        ('Jawa Tengah', 'Jawa Timur', {'cost_weight': 48, 'bus_name': 'bus F', 'time_weight': 6, 'origin_coords': (-7.0291435858578195, 110.41763151518792), 'dest_coords': (-7.302544723479081, 112.73783663618134)}),
-        ('Jawa Tengah', 'Jawa Timur', {'cost_weight': 60, 'bus_name': 'bus G', 'time_weight': 7, 'origin_coords': (-7.0291435858578195, 110.41763151518792), 'dest_coords': (-7.302544723479081, 112.73783663618134)}),
-        ('Jawa Tengah', 'Jawa Timur', {'cost_weight': 72, 'bus_name': 'bus H', 'time_weight': 8, 'origin_coords': (-7.0291435858578195, 110.41763151518792), 'dest_coords': (-7.302544723479081, 112.73783663618134)}),
+        ('Serang', 'Jakarta Pusat', {'cost_weight': 83, 'bus_name': 'bus Andara', 'time_weight': 78, 'origin_coords': (-6.109918118031118,106.1422995381122), 'dest_coords': ( -6.170238459973355, 106.84270678401491)}),
+        ('Serang', 'Jakarta Pusat', {'cost_weight': 74, 'bus_name': 'bus Endhog', 'time_weight': 85, 'origin_coords': (-6.109918118031118,106.1422995381122), 'dest_coords': ( -6.170238459973355, 106.84270678401491)}),
+        ('Serang', 'Jakarta Pusat', {'cost_weight': 65, 'bus_name': 'bus Mamanur', 'time_weight': 88, 'origin_coords': (-6.109918118031118,106.1422995381122), 'dest_coords': ( -6.170238459973355, 106.84270678401491)}),
+
+        ('Jakarta Pusat', 'Bandung', {'cost_weight': 80, 'bus_name': 'bus Endhog', 'time_weight': 145, 'origin_coords': ( -6.170238459973355, 106.84270678401491), 'dest_coords': (-6.913677130043071, 107.60203239958584)}),
+        ('Jakarta Pusat', 'Bandung', {'cost_weight': 89, 'bus_name': 'bus Mamanur', 'time_weight': 152, 'origin_coords': ( -6.170238459973355, 106.84270678401491), 'dest_coords': (-6.913677130043071, 107.60203239958584)}),
+
+        ('Bandung', 'Semarang', {'cost_weight': 370, 'bus_name': 'bus Busbew', 'time_weight': 313, 'origin_coords': (-6.913677130043071, 107.60203239958584), 'dest_coords': (-7.0291435858578195, 110.41763151518792)}),
+        ('Bandung', 'Semarang', {'cost_weight': 352, 'bus_name': 'bus Fateh', 'time_weight': 320, 'origin_coords': (-6.913677130043071, 107.60203239958584), 'dest_coords': (-7.0291435858578195, 110.41763151518792)}),
+
+        ('Bandung', 'Yogyakarta', {'cost_weight': 396, 'bus_name': 'bus Mamanur', 'time_weight': 442, 'origin_coords': (-6.913677130043071, 107.60203239958584), 'dest_coords': (-7.829349701804929, 110.39203413599496)}),
+
+        ('Semarang', 'Surabaya', {'cost_weight': 350, 'bus_name': 'bus Chuaks', 'time_weight': 257, 'origin_coords': (-7.0291435858578195, 110.41763151518792), 'dest_coords': (-7.302544723479081, 112.73783663618134)}),
+        ('Semarang', 'Surabaya', {'cost_weight': 332, 'bus_name': 'bus Fateh', 'time_weight': 264, 'origin_coords': (-7.0291435858578195, 110.41763151518792), 'dest_coords': (-7.302544723479081, 112.73783663618134)}),
+
+        ('Yogyakarta', 'Surabaya', {'cost_weight': 325, 'bus_name': 'bus Dirdor', 'time_weight': 295, 'origin_coords': (-7.829349701804929, 110.39203413599496), 'dest_coords': (-7.302544723479081, 112.73783663618134)}),
+        
+        ('Serang', 'Bandung', {'cost_weight': 230, 'bus_name': 'bus Gadda', 'time_weight': 232, 'origin_coords': (-6.109918118031118,106.1422995381122), 'dest_coords': (-6.913677130043071, 107.60203239958584)}),
+
+        ('Serang', 'Yogyakarta', {'cost_weight': 641, 'bus_name': 'bus Halilintar', 'time_weight': 555, 'origin_coords': (-6.109918118031118,106.1422995381122), 'dest_coords': (-7.829349701804929, 110.39203413599496)}),
+
+        ('Jakarta Pusat', 'Surabaya', {'cost_weight': 786, 'bus_name': 'bus Ijimayo', 'time_weight': 575, 'origin_coords': ( -6.170238459973355, 106.84270678401491), 'dest_coords': (-7.302544723479081, 112.73783663618134)}),
+
+        ('Jakarta Pusat', 'Semarang', {'cost_weight': 445, 'bus_name': 'bus Jamila', 'time_weight': 332 , 'origin_coords': ( -6.170238459973355, 106.84270678401491), 'dest_coords': (-7.0291435858578195, 110.41763151518792)}),
+        
+        ('Bandung', 'Surabaya', {'cost_weight': 711, 'bus_name': 'bus Katete', 'time_weight': 568, 'origin_coords': (-6.913677130043071, 107.60203239958584), 'dest_coords': (-7.302544723479081, 112.73783663618134)}),
+
+        ('Semarang', 'Yogyakarta', {'cost_weight': 130, 'bus_name': 'bus Lontar', 'time_weight': 165, 'origin_coords': (-7.0291435858578195, 110.41763151518792), 'dest_coords': (-7.829349701804929, 110.39203413599496)}),
     ]
 
     graph.add_edges_from([(u, v, d) for (u, v, d) in edges])
@@ -100,20 +121,20 @@ def astar(asal, tujuan):
     # }
 
     heuristic_time = {
-        'Jawa Timur' : 0,
-        'Jawa Tengah' : 0,
-        'Jawa Barat' : 0,
-        'Banten' : 0,
-        'DKI Jakarta' : 0,
+        'Surabaya' : 0,
+        'Semarang' : 0,
+        'Bandung' : 0,
+        'Serang' : 0,
+        'Jakarta Pusat' : 0,
         'Yogyakarta' : 0,
     }
 
     heuristic_cost = {
-        'Jawa Timur' : 0,
-        'Jawa Tengah' : 0,
-        'Jawa Barat' : 0,
-        'Banten' : 0,
-        'DKI Jakarta' : 0,
+        'Surabaya' : 0,
+        'Semarang' : 0,
+        'Bandung' : 0,
+        'Serang' : 0,
+        'Jakarta Pusat' : 0,
         'Yogyakarta' : 0,
     }
 
@@ -161,12 +182,12 @@ def astar(asal, tujuan):
 def option():
     
     options = [
-        { 'value': 'DKI Jakarta', 'label': 'DKI Jakarta', 'coordinate': { 'latitude': -6.170238459973355, 'longitude': 106.84270678401491 } },
-        { 'value': 'Banten', 'label': 'Banten', 'coordinate': { 'latitude': -6.109918118031118, 'longitude': 106.1422995381122 } },
-        { 'value': 'Jawa Barat', 'label': 'Jawa Barat', 'coordinate': { 'latitude': -6.913677130043071, 'longitude': 107.60203239958584 } },
-        { 'value': 'Jawa Tengah', 'label': 'Jawa Tengah', 'coordinate': { 'latitude': -7.0291435858578195, 'longitude': 110.41763151518792 } },
+        { 'value': 'Jakarta Pusat', 'label': 'Jakarta Pusat', 'coordinate': { 'latitude': -6.170238459973355, 'longitude': 106.84270678401491 } },
+        { 'value': 'Serang', 'label': 'Serang', 'coordinate': { 'latitude': -6.109918118031118, 'longitude': 106.1422995381122 } },
+        { 'value': 'Bandung', 'label': 'Bandung', 'coordinate': { 'latitude': -6.913677130043071, 'longitude': 107.60203239958584 } },
+        { 'value': 'Semarang', 'label': 'Semarang', 'coordinate': { 'latitude': -7.0291435858578195, 'longitude': 110.41763151518792 } },
         { 'value': 'Yogyakarta', 'label': 'Yogyakarta', 'coordinate': { 'latitude': -7.829349701804929, 'longitude': 110.39203413599496 } },
-        { 'value': 'Jawa Timur', 'label': 'Jawa Timur', 'coordinate': { 'latitude': -7.302544723479081, 'longitude': 112.73783663618134 } },
+        { 'value': 'Surabaya', 'label': 'Surabaya', 'coordinate': { 'latitude': -7.302544723479081, 'longitude': 112.73783663618134 } },
     ]
 
     response = {"success": True, "options": options, "message": "Option Request processed successfully"}

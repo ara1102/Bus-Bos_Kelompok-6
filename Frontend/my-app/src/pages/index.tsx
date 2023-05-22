@@ -1,7 +1,11 @@
 import ButtonLink from '@/components/ButtonLink'
 import React from 'react'
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ['latin'] })
 
 const App = () => {
+
 
   return (
     <>
