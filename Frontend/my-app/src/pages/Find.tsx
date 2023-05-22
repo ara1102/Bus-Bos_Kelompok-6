@@ -83,6 +83,24 @@ const Find = () => {
         },
     };
 
+    // const differentProvinceValidation = (value: string) => {
+    //         if (value && selectedOriOption && value === selectedOriOption.value) {
+    //         return "Provinsi asal dan tujuan tidak boleh sama";
+    //         }
+    //         return undefined;
+    //     };
+
+    // register("origin", {
+    //     validate: differentProvinceValidation,
+    // });
+
+    //   register("destination", {
+    //     validate: differentProvinceValidation,
+    // });
+
+    
+      
+
     return (
         <main className=''>
             <section className='bg-gradient-to-t from-[#3A0CA3] via-[#19195B] via-[#232268] to-[#3A0CA3] flex flex-col justify-center min-h-screen w-screen items-center'>
@@ -90,19 +108,17 @@ const Find = () => {
                 <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col w-full items-center h-full'>
                     <div className='bg-gradient-to-br from-[#7109B6] via-[#4BC9F1] to-[#7109B6] h-3/4 w-full flex flex-col gap-5 rounded-3xl items-center py-5'>
 
-
-
                         <div className='bg-[#122C5A] rounded-3xl flex flex-col p-5 w-11/12'>
                             <div className='flex flex-col gap-2'>
 
                                 <div className='sm:flex justify-between md:gap-2'>
 
                                     <div className='basis-1/2 flex flex-col'>
-                                        <label htmlFor='origin' className='text-white text-lg'>Provinsi Asal</label>
+                                        <label htmlFor='origin' className='text-white text-lg'>Kota Asal</label>
                                         <select
                                             id="origin"
                                             className="bg-gradient-to-t from-[#82ACF5] to-[#4460EF] p-2 rounded-full"
-                                            {...register("origin", { required: 'Provinsi Asal harus dipilih' })}
+                                            {...register("origin", { required: 'Kota Asal harus dipilih' })}
                                             onChange={(e) => {
                                                 const selectedValue = e.target.value;
                                                 const selectedOriOption = options.find(
@@ -111,7 +127,7 @@ const Find = () => {
                                                 setSelectedOriOption(selectedOriOption);
                                             }}
                                         >
-                                            <option value="">Pilih Provinsi Asal</option>
+                                            <option value="">Pilih Kota Asal</option>
                                             {options.map((option) => (
                                                 <option
                                                     className="bg-[#4460EF] text-white"
@@ -128,12 +144,12 @@ const Find = () => {
                                     </div>
 
                                     <div className='basis-1/2 flex flex-col'>
-                                        <label htmlFor='destination' className='text-white text-lg'>Provinsi Tujuan</label>
+                                        <label htmlFor='destination' className='text-white text-lg'>Kota Tujuan</label>
 
                                         <select
                                             id="destination"
                                             className="bg-gradient-to-t from-[#82ACF5] to-[#4460EF] p-2 rounded-full"
-                                            {...register("destination", { required: 'Provinsi tujuan harus dipilih' })}
+                                            {...register("destination", { required: 'Kota tujuan harus dipilih' })}
                                             onChange={(e) => {
                                                 const selectedValue = e.target.value;
                                                 const selectedDestOption = options.find(
@@ -142,7 +158,7 @@ const Find = () => {
                                                 setSelectedDestOption(selectedDestOption);
                                             }}
                                         >
-                                            <option value="">Pilih Provinsi Tujuan</option>
+                                            <option value="">Pilih Kota Tujuan</option>
                                             {options.map((option) => (
                                                 <option
                                                     className="bg-[#4460EF] text-white"

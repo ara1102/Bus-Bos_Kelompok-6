@@ -49,7 +49,9 @@ const Map = ({ ori, dest, path1, path2, toggle }: MapProps) => {
         iconSize: [25, 25],
     });
 
-    const position: [number, number] = [-6.17, 106.86];
+    // const position: [number, number] = [-6.17, 106.86];
+    const position:[number, number] = [-7.2145, 110.1129]; // Coordinates of Java Island
+
 
     const linePositions1 = path1 || [];
     const lines1 = [];
@@ -143,7 +145,7 @@ const Map = ({ ori, dest, path1, path2, toggle }: MapProps) => {
     }
 
     return (
-        <MapContainer className="map" center={position} zoom={13} scrollWheelZoom={true}>
+        <MapContainer className="map" center={position} zoom={6} scrollWheelZoom={true}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
