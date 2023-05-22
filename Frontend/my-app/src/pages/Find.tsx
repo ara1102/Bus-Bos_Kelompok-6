@@ -23,6 +23,8 @@ const Find = () => {
     const [options, setOptions] = useState<Array<Option>>([]);
     const [selectedOriOption, setSelectedOriOption] = useState<Option>();
     const [selectedDestOption, setSelectedDestOption] = useState<Option>();
+    const [submittedOriOption, setSubmittedOriOption] = useState<string>();
+    const [submittedDestOption, setSubmittedDestOption] = useState<string>();
 
     useEffect(() => {
         fetch('http://localhost:5000/option')
@@ -68,6 +70,8 @@ const Find = () => {
 
         setAnswer1(result.data.answer.data_rute1);
         setAnswer2(result.data.answer.data_rute2);
+        setSubmittedOriOption(result.data.origin);
+        setSubmittedDestOption(result.data.destination);
         setTotalCost1(result.data.answer.total_cost1);
         setTotalCost2(result.data.answer.total_cost2);
         setIsAnswered(true);
@@ -83,42 +87,44 @@ const Find = () => {
         },
     };
 
-    // const differentProvinceValidation = (value: string) => {
-    //         if (value && selectedOriOption && value === selectedOriOption.value) {
-    //         return "Provinsi asal dan tujuan tidak boleh sama";
-    //         }
-    //         return undefined;
-    //     };
+    const validateSameValue = (value: string, selectedOption: Option | undefined) => {
+        if (selectedOption && value === selectedOption.value) {
+            return "Kota asal dan tujuan tidak boleh sama";
+        }
+        return true;
+    };
 
-    // register("origin", {
-    //     validate: differentProvinceValidation,
-    // });
+    register("origin", {
+        required: 'Kota asal harus dipilih',
+        validate: (value) =>
+            validateSameValue(value, selectedDestOption),
+    });
 
-    //   register("destination", {
-    //     validate: differentProvinceValidation,
-    // });
+    register("destination", {
+        required: 'Kota tujuan harus dipilih',
+        validate: (value) =>
+            validateSameValue(value, selectedOriOption),
+    });
 
-    
-      
 
     return (
         <main className=''>
-            <section className='bg-gradient-to-t from-[#3A0CA3] via-[#19195B] via-[#232268] to-[#3A0CA3] flex flex-col justify-center min-h-screen w-screen items-center'>
+            <section className='bg-gradient-to-t from-[#170B94] via-[#330FBD] via-[#F0B7D2] via-[#330FBD] to-[#170B94] flex flex-col justify-center min-h-screen w-screen items-center'>
 
                 <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col w-full items-center h-full'>
-                    <div className='bg-gradient-to-br from-[#7109B6] via-[#4BC9F1] to-[#7109B6] h-3/4 w-full flex flex-col gap-5 rounded-3xl items-center py-5'>
+                    <div className='bg-gradient-to-br from-[#7109B6] via-[#4BC9F1] to-[#7109B6] h-3/4 w-11/12 flex flex-col gap-5 rounded-3xl items-center py-5 my-5'>
 
                         <div className='bg-[#122C5A] rounded-3xl flex flex-col p-5 w-11/12'>
                             <div className='flex flex-col gap-2'>
 
-                                <div className='sm:flex justify-between md:gap-2'>
+                                <div className='sm:flex justify-between gap-10'>
 
                                     <div className='basis-1/2 flex flex-col'>
                                         <label htmlFor='origin' className='text-white text-lg'>Kota Asal</label>
                                         <select
                                             id="origin"
                                             className="bg-gradient-to-t from-[#82ACF5] to-[#4460EF] p-2 rounded-full"
-                                            {...register("origin", { required: 'Kota Asal harus dipilih' })}
+                                            {...register("origin")}
                                             onChange={(e) => {
                                                 const selectedValue = e.target.value;
                                                 const selectedOriOption = options.find(
@@ -149,7 +155,7 @@ const Find = () => {
                                         <select
                                             id="destination"
                                             className="bg-gradient-to-t from-[#82ACF5] to-[#4460EF] p-2 rounded-full"
-                                            {...register("destination", { required: 'Kota tujuan harus dipilih' })}
+                                            {...register("destination")}
                                             onChange={(e) => {
                                                 const selectedValue = e.target.value;
                                                 const selectedDestOption = options.find(
@@ -178,16 +184,46 @@ const Find = () => {
                         </div>
 
                         {isAnswered && (
-                            <label className="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" className="sr-only peer" checked={isToggled} onChange={() => setIsToggled(!isToggled)} />
-                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#766FF9]"></div>
-                                <span className="ml-3 text-sm font-medium text-black dark:text-black"> Waktu Tempuh</span>
-                            </label>)
+                            <div className='flex flex-col md:flex-row text-semibold gap-5 justify-around'>
+
+                                <div className="flex items-center bg-gradient-to-t from-[#F0B7D1] to-[#D73B83] p-2 rounded-full shadow-md">
+                                    <input
+                                        id="default-radio-1"
+                                        type="radio"
+                                        value=""
+                                        name="default-radio"
+                                        checked={!isToggled}
+                                        onChange={() => setIsToggled(!isToggled)}
+                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                    />
+                                    <label htmlFor="default-radio-1" className="ml-2 text-sm font-medium text-white">
+                                        Harga Termurah
+                                    </label>
+                                </div>
+
+                                <div className="flex items-center bg-gradient-to-t from-[#F0B7D1] to-[#D73B83] p-2 rounded-full shadow-md">
+                                    <input
+                                        id="default-radio-2"
+                                        type="radio"
+                                        value=""
+                                        name="default-radio"
+                                        checked={isToggled}
+                                        onChange={() => setIsToggled(!isToggled)}
+                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                    />
+                                    <label htmlFor="default-radio-2" className="ml-2 text-sm font-medium text-white">
+                                        Waktu Tercepat
+                                    </label>
+                                </div>
+
+                            </div>
+
+                        )
                         }
 
-                        <div className='w-full h-full flex flex-col md:flex-row items-center justify-around'>
+                        <div className='w-full h-full flex flex-col md:flex-row items-center md:items-start justify-around gap-5 md:px-5'>
 
-                            <div className="bg-red-500 w-11/12 h-96 md:w-1/2 md:h-52 border-2">
+                            <div className="md:basis-1/2 bg-blue-500 w-11/12 h-96 md:w-1/2 md:h-52 border-2">
 
                                 <Map
                                     ori={selectedOriOption || emptyOption}
@@ -203,32 +239,33 @@ const Find = () => {
 
                             {isAnswered && !isToggled && (
                                 <>
-                                    <div className='text-black bg-blue-500'>
-                                        <h2 className="text-2xl mt-6">Rute dan biaya tempuh:</h2>
-                                        <ul>
-                                            {answer1.map(([start, end, cost, busName]) => (
-                                                <li key={start}>
-                                                    {start} -&gt; {end} : {cost} by {busName}
+                                    <div className='md:basis-1/2 text-white bg-gradient-to-t from-[#7109B6] to-[#3A0CA3] p-5 rounded-3xl mx-5 md:mx-0'>
+                                        <h2 className="text-2xl font-semibold"> {submittedOriOption && submittedDestOption ? `Rute Bus ${submittedOriOption} -> ${submittedDestOption} Termurah` : null}</h2>
+                                        <ul className=''>
+                                            {answer1.map(([start, end, cost, busName], i) => (
+                                                <li className="p-2 bg-[#7109B6]/60 rounded-3xl my-1" key={start}>
+                                                    {i + 1}. {start} -&gt; {end} : Rp{cost}.000 by {busName}
                                                 </li>
                                             ))}
                                         </ul>
-                                        <h2>Total Biaya Tempuh : {totalCost1} </h2>
+                                        {totalCost1 ? <h2>Total Waktu Tempuh Rp{totalCost1.toLocaleString()}.000 </h2> : <h2> Bus Tidak Ditemukan</h2>}
                                     </div>
                                 </>
                             )}
 
                             {isAnswered && isToggled && (
                                 <>
-                                    <div className='text-black bg-blue-500'>
-                                        <h2 className="text-2xl mt-6">Rute dan waktu tempuh:</h2>
+                                    <div className='md:basis-1/2 text-white bg-gradient-to-t from-[#7109B6] to-[#3A0CA3] p-5 rounded-3xl mx-5 md:mx-0'>
+                                        <h2 className="text-2xl font-semibold"> {submittedOriOption && submittedDestOption ? `Rute Bus ${submittedOriOption} -> ${submittedDestOption} Tercepat` : null}</h2>
                                         <ul>
                                             {answer2.map(([start, end, cost, busName]) => (
-                                                <li key={start}>
-                                                    {start} -&gt; {end} : {cost} by {busName}
+                                                <li className="p-2 bg-[#7109B6]/60 rounded-3xl my-1" key={start}>
+                                                    {start} -&gt; {end} : {cost > 60 ? `${Math.floor(cost / 60)} jam ${cost % 60} menit` : cost} by {busName}
                                                 </li>
                                             ))}
                                         </ul>
-                                        <h2>Total Waktu Tempuh : {totalCost2} </h2>
+                                        {totalCost2 ? <h2>Total Waktu Tempuh : {totalCost2 > 60 ? `${Math.floor(totalCost2 / 60)} jam ${totalCost2 % 60} menit` : totalCost2} </h2> : <h2> Bus Tidak Ditemukan</h2>}
+
                                     </div>
                                 </>
                             )}
@@ -238,7 +275,7 @@ const Find = () => {
                     </div>
 
                     <div>
-                        <input type="submit" className='font-semibold p-2 cursor-pointer w-full bg-gradient-to-r from-sky-500 to-indigo-500 rounded-xl shadow-lg' />
+                        <input type="submit" className='font-semibold px-5 py-2 cursor-pointer w-full bg-gradient-to-r from-sky-500 to-indigo-500 rounded-3xl shadow-lg' />
                     </div>
                 </form>
             </section>

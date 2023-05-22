@@ -60,40 +60,23 @@ def astar(asal, tujuan):
 
     graph = nx.MultiGraph()
 
-    # Rute Bus
-    # Ini tinggal tambahin rute rute bus
-    # cost_weight itu weight buat a* berdasarkan harga tiket 
-    # time_weight itu weight buat a* berdasarkan waktu tempuh
-
-
     edges = [
         ('Serang', 'Jakarta Pusat', {'cost_weight': 83, 'bus_name': 'bus Andara', 'time_weight': 78, 'origin_coords': (-6.109918118031118,106.1422995381122), 'dest_coords': ( -6.170238459973355, 106.84270678401491)}),
         ('Serang', 'Jakarta Pusat', {'cost_weight': 74, 'bus_name': 'bus Endhog', 'time_weight': 85, 'origin_coords': (-6.109918118031118,106.1422995381122), 'dest_coords': ( -6.170238459973355, 106.84270678401491)}),
         ('Serang', 'Jakarta Pusat', {'cost_weight': 65, 'bus_name': 'bus Mamanur', 'time_weight': 88, 'origin_coords': (-6.109918118031118,106.1422995381122), 'dest_coords': ( -6.170238459973355, 106.84270678401491)}),
-
         ('Jakarta Pusat', 'Bandung', {'cost_weight': 80, 'bus_name': 'bus Endhog', 'time_weight': 145, 'origin_coords': ( -6.170238459973355, 106.84270678401491), 'dest_coords': (-6.913677130043071, 107.60203239958584)}),
         ('Jakarta Pusat', 'Bandung', {'cost_weight': 89, 'bus_name': 'bus Mamanur', 'time_weight': 152, 'origin_coords': ( -6.170238459973355, 106.84270678401491), 'dest_coords': (-6.913677130043071, 107.60203239958584)}),
-
-        ('Bandung', 'Semarang', {'cost_weight': 370, 'bus_name': 'bus Busbew', 'time_weight': 313, 'origin_coords': (-6.913677130043071, 107.60203239958584), 'dest_coords': (-7.0291435858578195, 110.41763151518792)}),
+        ('Bandung', 'Semarang', {'cost_weight': 370, 'bus_name': 'bus Buslebew', 'time_weight': 313, 'origin_coords': (-6.913677130043071, 107.60203239958584), 'dest_coords': (-7.0291435858578195, 110.41763151518792)}),
         ('Bandung', 'Semarang', {'cost_weight': 352, 'bus_name': 'bus Fateh', 'time_weight': 320, 'origin_coords': (-6.913677130043071, 107.60203239958584), 'dest_coords': (-7.0291435858578195, 110.41763151518792)}),
-
         ('Bandung', 'Yogyakarta', {'cost_weight': 396, 'bus_name': 'bus Mamanur', 'time_weight': 442, 'origin_coords': (-6.913677130043071, 107.60203239958584), 'dest_coords': (-7.829349701804929, 110.39203413599496)}),
-
         ('Semarang', 'Surabaya', {'cost_weight': 350, 'bus_name': 'bus Chuaks', 'time_weight': 257, 'origin_coords': (-7.0291435858578195, 110.41763151518792), 'dest_coords': (-7.302544723479081, 112.73783663618134)}),
         ('Semarang', 'Surabaya', {'cost_weight': 332, 'bus_name': 'bus Fateh', 'time_weight': 264, 'origin_coords': (-7.0291435858578195, 110.41763151518792), 'dest_coords': (-7.302544723479081, 112.73783663618134)}),
-
         ('Yogyakarta', 'Surabaya', {'cost_weight': 325, 'bus_name': 'bus Dirdor', 'time_weight': 295, 'origin_coords': (-7.829349701804929, 110.39203413599496), 'dest_coords': (-7.302544723479081, 112.73783663618134)}),
-        
         ('Serang', 'Bandung', {'cost_weight': 230, 'bus_name': 'bus Gadda', 'time_weight': 232, 'origin_coords': (-6.109918118031118,106.1422995381122), 'dest_coords': (-6.913677130043071, 107.60203239958584)}),
-
         ('Serang', 'Yogyakarta', {'cost_weight': 641, 'bus_name': 'bus Halilintar', 'time_weight': 555, 'origin_coords': (-6.109918118031118,106.1422995381122), 'dest_coords': (-7.829349701804929, 110.39203413599496)}),
-
         ('Jakarta Pusat', 'Surabaya', {'cost_weight': 786, 'bus_name': 'bus Ijimayo', 'time_weight': 575, 'origin_coords': ( -6.170238459973355, 106.84270678401491), 'dest_coords': (-7.302544723479081, 112.73783663618134)}),
-
         ('Jakarta Pusat', 'Semarang', {'cost_weight': 445, 'bus_name': 'bus Jamila', 'time_weight': 332 , 'origin_coords': ( -6.170238459973355, 106.84270678401491), 'dest_coords': (-7.0291435858578195, 110.41763151518792)}),
-        
         ('Bandung', 'Surabaya', {'cost_weight': 711, 'bus_name': 'bus Katete', 'time_weight': 568, 'origin_coords': (-6.913677130043071, 107.60203239958584), 'dest_coords': (-7.302544723479081, 112.73783663618134)}),
-
         ('Semarang', 'Yogyakarta', {'cost_weight': 130, 'bus_name': 'bus Lontar', 'time_weight': 165, 'origin_coords': (-7.0291435858578195, 110.41763151518792), 'dest_coords': (-7.829349701804929, 110.39203413599496)}),
     ]
 
@@ -150,7 +133,7 @@ def astar(asal, tujuan):
         for i in range(len(fixed_path1)-1):
             current_node, current_cost, current_bus, curr_ori_coords, curr_dest_coords= fixed_path1[i]
             next_node, next_cost, next_bus, next_ori_coords, next_dest_coords = fixed_path1[i+1]
-            edge_cost = next_cost-current_cost
+            edge_cost = (next_cost-current_cost)
             rute1.append((current_node, next_node, edge_cost, next_bus, next_ori_coords , next_dest_coords))
             print(f"{current_node} -> {next_node} : {edge_cost} : {next_bus} : Line Coords = {next_ori_coords} , {next_dest_coords} ")
         print(f"Total biaya perjalanan dengan heuristic 1: {final_cost1}")

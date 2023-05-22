@@ -8,7 +8,7 @@ edges = [
     ('Banten', 'DKI Jakarta', {'cost_weight': 9, 'bus_name': 'bus B', 'time_weight': 2}),
     ('Banten', 'Jawa Barat', {'cost_weight': 22, 'bus_name': 'bus C', 'time_weight': 3}),
     ('DKI Jakarta', 'Jawa Barat', {'cost_weight': 44, 'bus_name': 'bus D', 'time_weight': 4}),
-    ('Jawa Barat', 'Jawa Tengah', {'cost_weight': 29, 'bus_name': 'bus E', 'time_weight': 5}),
+    ('Jawa Barat', 'Jawa Tengah', {'cost_weight': 29, 'bus_n ame': 'bus E', 'time_weight': 5}),
     ('Jawa Tengah', 'Jawa Timur', {'cost_weight': 48, 'bus_name': 'bus F', 'time_weight': 6}),
     ('Jawa Tengah', 'Jawa Timur', {'cost_weight': 60, 'bus_name': 'bus G', 'time_weight': 7}),
     ('Jawa Tengah', 'Jawa Timur', {'cost_weight': 72, 'bus_name': 'bus H', 'time_weight': 8}),

@@ -25,6 +25,7 @@ type MapProps = {
 };
 
 const Map = ({ ori, dest, path1, path2, toggle }: MapProps) => {
+
     let marker1Position: [number, number] = [
         ori.coordinate.latitude,
         ori.coordinate.longitude,
@@ -49,8 +50,7 @@ const Map = ({ ori, dest, path1, path2, toggle }: MapProps) => {
         iconSize: [25, 25],
     });
 
-    // const position: [number, number] = [-6.17, 106.86];
-    const position:[number, number] = [-7.2145, 110.1129]; // Coordinates of Java Island
+    const position:[number, number] = [-7.2145, 110.1129];
 
 
     const linePositions1 = path1 || [];
@@ -95,7 +95,6 @@ const Map = ({ ori, dest, path1, path2, toggle }: MapProps) => {
         if (startPoint[0] !== marker1Position[0] && startPoint[1] !== marker1Position[1] && startPoint[0] !== marker2Position[0] && startPoint[1] !== marker2Position[1]) {
             startMarker = (
                 <Marker position={startPoint} key={`start-${i}`} icon={markerIcon3}>
-                    <Popup>Start Point</Popup>
                 </Marker>
             );
         }
@@ -106,7 +105,6 @@ const Map = ({ ori, dest, path1, path2, toggle }: MapProps) => {
         if (endPoint[0] !== marker1Position[0] && endPoint[1] !== marker1Position[1] && endPoint[0] !== marker2Position[0] && endPoint[1] !== marker2Position[1]) {
             endMarker = (
                 <Marker position={endPoint} key={`start-${i}`} icon={markerIcon3}>
-                    <Popup>End Point</Popup>
                 </Marker>
             );
         }
@@ -125,7 +123,6 @@ const Map = ({ ori, dest, path1, path2, toggle }: MapProps) => {
         if (startPoint[0] !== marker1Position[0] && startPoint[1] !== marker1Position[1] && startPoint[0] !== marker2Position[0] && startPoint[1] !== marker2Position[1]) {
             startMarker = (
                 <Marker position={startPoint} key={`start-${i}`} icon={markerIcon3}>
-                    <Popup>Start Point</Popup>
                 </Marker>
             );
         }
@@ -136,7 +133,6 @@ const Map = ({ ori, dest, path1, path2, toggle }: MapProps) => {
         if (endPoint[0] !== marker1Position[0] && endPoint[1] !== marker1Position[1] && endPoint[0] !== marker2Position[0] && endPoint[1] !== marker2Position[1]) {
             endMarker = (
                 <Marker position={endPoint} key={`start-${i}`} icon={markerIcon3}>
-                    <Popup>End Point</Popup>
                 </Marker>
             );
         }
@@ -152,12 +148,12 @@ const Map = ({ ori, dest, path1, path2, toggle }: MapProps) => {
             />
             <Marker position={marker1Position} icon={markerIcon1}>
                 <Popup>
-                    A pretty CSS3 popup. <br /> Easily customizable.
+                    Kota Asal: {ori.label}
                 </Popup>
             </Marker>
             <Marker position={marker2Position} icon={markerIcon2}>
                 <Popup>
-                    A pretty CSS3 popup. <br /> Easily customizable.
+                    Kota Tujuan: {dest.label}
                 </Popup>
             </Marker>
 
