@@ -4,12 +4,11 @@ import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ['latin'] })
 
+// App merupakan komponen yang menghandle laman dashboard
 const App = () => {
-
 
   return (
     <>
-      {/* <div>BUS-BOS</div> */}
       <div className='flex flex-col flex-wrap sm:flex-col gap-2 items-center justify-center bg-gradient-to-t from-[#170B94] via-[#330FBD] via-[#F0B7D2] via-[#330FBD] to-[#170B94] w-screen h-screen'>
 
         <div className='flex flex-col items-center'>
@@ -17,10 +16,12 @@ const App = () => {
           <h3 className='font-semibold text-xl'>Buslebew</h3>
         </div>
 
-
         <div className='flex flex-row flex-wrap justify-center'>
+
+          {/* Memanggil Komponent ButtonLink */}
           <ButtonLink link='Find' title="Cari Bus" />
           <ButtonLink link='About' title="Tentang Kami" />
+
         </div>
 
       </div>

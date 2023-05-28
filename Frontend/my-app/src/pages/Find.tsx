@@ -2,7 +2,8 @@ import { useForm } from 'react-hook-form'
 import React, { useEffect, useState } from 'react'
 import Map from '../components/Map';
 
-export interface FindValues {
+// Mendefinisikan tipe data dari props
+type FindValues = {
     origin: string,
     destination: string
 }
@@ -18,14 +19,31 @@ type Option = {
     coordinate: Coordinate;
 }
 
+// Find merupakan komponen yang menghandle laman pencarian rute bus
 const Find = () => {
 
+    // Menggunakan react-hook-form untuk menghandle form pencarian dan melakukan validasi
+    const {
+        register,
+        reset,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<FindValues>({ mode: "onChange" });
+
+    // Mendeklarasikan beberapa use state
     const [options, setOptions] = useState<Array<Option>>([]);
     const [selectedOriOption, setSelectedOriOption] = useState<Option>();
     const [selectedDestOption, setSelectedDestOption] = useState<Option>();
     const [submittedOriOption, setSubmittedOriOption] = useState<string>();
     const [submittedDestOption, setSubmittedDestOption] = useState<string>();
+    const [answer1, setAnswer1] = useState<Array<[string, string, number, string, [number, number], [number, number]]>>([]);
+    const [answer2, setAnswer2] = useState<Array<[string, string, number, string, [number, number], [number, number]]>>([]);
+    const [totalCost1, setTotalCost1] = useState<number>();
+    const [totalCost2, setTotalCost2] = useState<number>();
+    const [isAnswered, setIsAnswered] = useState(false);
+    const [isToggled, setIsToggled] = useState(false);
 
+    // Meminta request data dari endpoint '/option'
     useEffect(() => {
         fetch('http://localhost:5000/option')
             .then((response) => response.json())
@@ -39,20 +57,7 @@ const Find = () => {
 
     }, []);
 
-    const [answer1, setAnswer1] = useState<Array<[string, string, number, string, [number, number], [number, number]]>>([]);
-    const [answer2, setAnswer2] = useState<Array<[string, string, number, string, [number, number], [number, number]]>>([]);
-    const [totalCost1, setTotalCost1] = useState<number>();
-    const [totalCost2, setTotalCost2] = useState<number>();
-    const [isAnswered, setIsAnswered] = useState(false);
-    const [isToggled, setIsToggled] = useState(false);
-
-    const {
-        register,
-        reset,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<FindValues>({ mode: "onChange" });
-
+    // Menghandle form submission
     const onSubmit = async (data: FindValues) => {
         const response = await fetch('http://localhost:5000/members', {
             method: 'POST',
@@ -87,6 +92,7 @@ const Find = () => {
         },
     };
 
+    // Melakukan validasi apabila kota asal dan kota tujuan sama
     const validateSameValue = (value: string, selectedOption: Option | undefined) => {
         if (selectedOption && value === selectedOption.value) {
             return "Kota asal dan tujuan tidak boleh sama";
@@ -106,11 +112,10 @@ const Find = () => {
             validateSameValue(value, selectedOriOption),
     });
 
-
+    // Render laman pencarian
     return (
         <main className=''>
             <section className='bg-gradient-to-t from-[#170B94] via-[#330FBD] via-[#F0B7D2] via-[#330FBD] to-[#170B94] flex flex-col justify-center min-h-screen w-screen items-center'>
-
                 <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col w-full items-center h-full'>
                     <div className='bg-gradient-to-br from-[#7109B6] via-[#4BC9F1] to-[#7109B6] h-3/4 w-11/12 flex flex-col gap-5 rounded-3xl items-center py-5 my-5'>
 
@@ -119,6 +124,7 @@ const Find = () => {
 
                                 <div className='sm:flex justify-between gap-10'>
 
+                                    {/* Input Kota Asal */}
                                     <div className='basis-1/2 flex flex-col'>
                                         <label htmlFor='origin' className='text-white text-lg'>Kota Asal</label>
                                         <select
@@ -149,9 +155,9 @@ const Find = () => {
                                         )}
                                     </div>
 
+                                     {/* Input Kota Tujuan */}
                                     <div className='basis-1/2 flex flex-col'>
                                         <label htmlFor='destination' className='text-white text-lg'>Kota Tujuan</label>
-
                                         <select
                                             id="destination"
                                             className="bg-gradient-to-t from-[#82ACF5] to-[#4460EF] p-2 rounded-full"
@@ -183,6 +189,7 @@ const Find = () => {
                             </div>
                         </div>
 
+                        {/* Radio Button untuk memilih jenis pencarian */}
                         {isAnswered && (
                             <div className='flex flex-col md:flex-row text-semibold gap-5 justify-around'>
 
@@ -218,13 +225,13 @@ const Find = () => {
 
                             </div>
 
-                        )
-                        }
+                        )}
 
                         <div className='w-full h-full flex flex-col md:flex-row items-center md:items-start justify-around gap-5 md:px-5'>
 
                             <div className="md:basis-1/2 bg-blue-500 w-11/12 h-96 md:w-1/2 md:h-52 border-2">
 
+                                {/* Memanggil komponen peta */}
                                 <Map
                                     ori={selectedOriOption || emptyOption}
                                     dest={selectedDestOption || emptyOption}
@@ -237,6 +244,7 @@ const Find = () => {
                                 />
                             </div>
 
+                            {/* Hasil pencarian berdasarkan harga termurah */}
                             {isAnswered && !isToggled && (
                                 <>
                                     <div className='md:basis-1/2 text-white bg-gradient-to-t from-[#7109B6] to-[#3A0CA3] p-5 rounded-3xl mx-5 md:mx-0'>
@@ -248,11 +256,12 @@ const Find = () => {
                                                 </li>
                                             ))}
                                         </ul>
-                                        {totalCost1 ? <h2>Total Waktu Tempuh Rp{totalCost1.toLocaleString()}.000 </h2> : <h2> Bus Tidak Ditemukan</h2>}
+                                        {totalCost1 ? <h2>Total Harga Tempuh Rp{totalCost1}.000 </h2> : <h2> Bus Tidak Ditemukan</h2>}
                                     </div>
                                 </>
                             )}
 
+                            {/* Hasil pencarian berdasarkan waktu termurah */}
                             {isAnswered && isToggled && (
                                 <>
                                     <div className='md:basis-1/2 text-white bg-gradient-to-t from-[#7109B6] to-[#3A0CA3] p-5 rounded-3xl mx-5 md:mx-0'>
@@ -271,9 +280,9 @@ const Find = () => {
                             )}
                         </div>
 
-
                     </div>
 
+                    {/* tombol submit */}
                     <div>
                         <input type="submit" className='font-semibold px-5 py-2 cursor-pointer w-full bg-gradient-to-r from-sky-500 to-indigo-500 rounded-3xl shadow-lg' />
                     </div>
